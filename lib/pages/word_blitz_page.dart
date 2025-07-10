@@ -85,18 +85,129 @@ class WordBlitzPage extends StatelessWidget {
         GestureDetector(
           onTap: () {
             HapticFeedback.lightImpact();
-            Get.defaultDialog(
-              title: 'Exit Quiz?',
-              middleText: 'Your progress will be lost.',
-              textConfirm: 'Exit',
-              textCancel: 'Stay',
-              confirmTextColor: Colors.white,
-              buttonColor: Color(0xFFFFC2AD),
-              cancelTextColor: Color(0xff232323),
-              onConfirm: () {
-                Get.back(); // Close dialog
-                Get.back(); // Close quiz
-              },
+            Get.dialog(
+              Dialog(
+                backgroundColor: Colors.transparent,
+                child: Container(
+                  padding: EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Color(0xFFFFFFFF),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.black, width: 1),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Exit Quiz?',
+                        style: GoogleFonts.inter(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xff232323),
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                      Text(
+                        'Your progress will be lost and you\'ll need to start over.',
+                        style: GoogleFonts.inter(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xff232323),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 24),
+
+                      // Exit button
+                      Obx(() {
+                        final isPressed =
+                            controller.selectedOptionIndex.value == 996;
+                        return AnimatedScale(
+                          scale: isPressed ? 0.95 : 1.0,
+                          duration: Duration(milliseconds: 200),
+                          child: GestureDetector(
+                            onTapDown: (_) =>
+                                controller.selectedOptionIndex.value = 996,
+                            onTapUp: (_) {
+                              controller.selectedOptionIndex.value = -1;
+                              Get.back(); // Close dialog
+                              Get.back(); // Close quiz
+                            },
+                            onTapCancel: () =>
+                                controller.selectedOptionIndex.value = -1,
+                            child: Container(
+                              width: double.infinity,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFFFC2AD),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: Colors.black,
+                                  width: 1,
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Exit Quiz',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xff232323),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+
+                      SizedBox(height: 12),
+
+                      // Stay button
+                      Obx(() {
+                        final isPressed =
+                            controller.selectedOptionIndex.value == 995;
+                        return AnimatedScale(
+                          scale: isPressed ? 0.95 : 1.0,
+                          duration: Duration(milliseconds: 200),
+                          child: GestureDetector(
+                            onTapDown: (_) =>
+                                controller.selectedOptionIndex.value = 995,
+                            onTapUp: (_) {
+                              controller.selectedOptionIndex.value = -1;
+                              Get.back();
+                            },
+                            onTapCancel: () =>
+                                controller.selectedOptionIndex.value = -1,
+                            child: Container(
+                              width: double.infinity,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFCBE8BA),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: Colors.black,
+                                  width: 1,
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Continue Quiz',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xff232323),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+              ),
             );
           },
           child: Icon(Icons.close, color: Color(0xff232323), size: 28),
@@ -107,7 +218,7 @@ class WordBlitzPage extends StatelessWidget {
         // Animated progress bar
         Expanded(
           child: Obx(() {
-            double progress = controller.timeLeft.value / 60.0;
+            double progress = controller.timeLeft.value / 30.0;
             return LinearPercentIndicator(
               percent: progress,
               lineHeight: 12.0,
@@ -126,15 +237,18 @@ class WordBlitzPage extends StatelessWidget {
         SizedBox(width: 20),
 
         // Timer
-        Obx(
-          () => Text(
-            '${controller.timeLeft.value}s',
-            style: GoogleFonts.inter(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: controller.timeLeft.value > 10
-                  ? Color(0xff232323)
-                  : Color(0xFFFFC2AD),
+        SizedBox(
+          width: 55,
+          child: Obx(
+            () => Text(
+              '${controller.timeLeft.value}s',
+              style: GoogleFonts.inter(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: controller.timeLeft.value > 10
+                    ? Color(0xff232323)
+                    : Color(0xFFFFC2AD),
+              ),
             ),
           ),
         ),
@@ -298,7 +412,7 @@ class WordBlitzPage extends StatelessWidget {
                         topLeft: Radius.circular(24),
                         topRight: Radius.circular(24),
                       ),
-                      border: Border.all(color: Colors.black, width: 1),
+                      // border: Border.all(color: Colors.black, width: 1),
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(24),

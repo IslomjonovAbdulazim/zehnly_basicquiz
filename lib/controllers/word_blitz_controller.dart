@@ -43,6 +43,7 @@ class WordBlitzController extends GetxController
   AudioPlayer? _correctPlayer;
   AudioPlayer? _wrongPlayer;
   AudioPlayer? _timePlayer;
+  AudioPlayer? _lessonCompletionPlayer;
 
   // Animation controllers
   late AnimationController fadeController;
@@ -150,7 +151,9 @@ class WordBlitzController extends GetxController
       _correctPlayer = AudioPlayer();
       _wrongPlayer = AudioPlayer();
       _timePlayer = AudioPlayer();
+      _lessonCompletionPlayer = AudioPlayer();
 
+      await _lessonCompletionPlayer!.setAsset('assets/lesson_completion.mp3');
       await _correctPlayer!.setAsset('assets/correct.mp3');
       await _wrongPlayer!.setAsset('assets/wrong.mp3');
       await _timePlayer!.setAsset('assets/time.mp3');
@@ -205,7 +208,7 @@ class WordBlitzController extends GetxController
   }
 
   void _startTimer() {
-    timeLeft.value = 60;
+    timeLeft.value = 30;
     _timer?.cancel();
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (timeLeft.value > 0) {
@@ -314,6 +317,18 @@ class WordBlitzController extends GetxController
   void _completeQuiz() {
     quizCompleted.value = true;
     _timer?.cancel();
+    _playLessonCompletionSound();
+  }
+
+  void _playLessonCompletionSound() async {
+    try {
+      if (_lessonCompletionPlayer != null) {
+        await _lessonCompletionPlayer!.seek(Duration.zero);
+        await _lessonCompletionPlayer!.play();
+      }
+    } catch (e) {
+      print('Error playing lesson completion sound: $e');
+    }
   }
 
   void restartQuiz() {
@@ -331,7 +346,7 @@ class WordBlitzController extends GetxController
     _timer?.cancel();
     currentQuestionIndex.value = 0;
     score.value = 0;
-    timeLeft.value = 60;
+    timeLeft.value = 30;
     selectedAnswer.value = '';
     isAnswered.value = false;
     showResult.value = false;
@@ -357,6 +372,7 @@ class WordBlitzController extends GetxController
     fadeController.dispose();
     scaleController.dispose();
     slideController.dispose();
+    _lessonCompletionPlayer?.dispose();
     super.onClose();
   }
 }

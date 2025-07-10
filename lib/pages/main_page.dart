@@ -137,6 +137,7 @@ class MainPage extends StatelessWidget {
                     child: Container(
                       width: double.infinity,
                       height: 100,
+                      padding: EdgeInsets.symmetric(horizontal: 20),
                       decoration: BoxDecoration(
                         color: _getCardColor(game.color),
                         borderRadius: BorderRadius.circular(16),
