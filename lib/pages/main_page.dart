@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:zehnly_basicquiz/pages/guess_definition_page.dart';
 import 'package:zehnly_basicquiz/pages/word_blitz_page.dart';
 import '../controllers/main_controller.dart';
 
@@ -126,7 +127,9 @@ class MainPage extends StatelessWidget {
                       controller.selectedGameIndex.value = index;
                     },
                     onTapUp: (_) {
-                      if (game.title == "Word Blitz") {
+                      if (game.color == "definition") {
+                        Get.to(GuessDefinitionPage());
+                      } else if (game.color == "blitz") {
                         Get.to(WordBlitzPage());
                       }
                       controller.selectedGameIndex.value = -1;

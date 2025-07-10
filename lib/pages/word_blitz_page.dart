@@ -10,13 +10,11 @@ import '../controllers/word_blitz_controller.dart';
 class WordBlitzPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Get existing controller or create new one, then reset
     final WordBlitzController controller =
-        Get.isRegistered<WordBlitzController>()
+    Get.isRegistered<WordBlitzController>()
         ? Get.find<WordBlitzController>()
         : Get.put(WordBlitzController());
 
-    // Reset everything when page loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.restartQuiz();
     });
@@ -52,22 +50,22 @@ class WordBlitzPage extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Column(
                 children: [
-                  // Header with close button and timer
                   _buildHeader(controller),
-
                   SizedBox(height: 40),
-
-                  // Question card
                   Spacer(),
                   _buildQuestionCard(controller),
-                  SizedBox(height: 40),
-
-                  // Answer options
+                  SizedBox(height: 20),
+                  Text(
+                    'O\'zbek tilidagi tarjimasini tanlang:',
+                    style: GoogleFonts.inter(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xff666666),
+                    ),
+                  ),
+                  SizedBox(height: 20),
                   _buildAnswerOptions(controller),
-
                   SizedBox(height: 30),
-
-                  // Progress bar at bottom
                   Spacer(),
                   _buildProgressBar(controller),
                 ],
@@ -85,137 +83,11 @@ class WordBlitzPage extends StatelessWidget {
         GestureDetector(
           onTap: () {
             HapticFeedback.lightImpact();
-            Get.dialog(
-              Dialog(
-                backgroundColor: Colors.transparent,
-                child: Container(
-                  padding: EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: Color(0xFFFFFFFF),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.black, width: 1),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Exit Quiz?',
-                        style: GoogleFonts.inter(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xff232323),
-                        ),
-                      ),
-                      SizedBox(height: 12),
-                      Text(
-                        'Your progress will be lost and you\'ll need to start over.',
-                        style: GoogleFonts.inter(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xff232323),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 24),
-
-                      // Exit button
-                      Obx(() {
-                        final isPressed =
-                            controller.selectedOptionIndex.value == 996;
-                        return AnimatedScale(
-                          scale: isPressed ? 0.95 : 1.0,
-                          duration: Duration(milliseconds: 200),
-                          child: GestureDetector(
-                            onTapDown: (_) =>
-                                controller.selectedOptionIndex.value = 996,
-                            onTapUp: (_) {
-                              controller.selectedOptionIndex.value = -1;
-                              Get.back(); // Close dialog
-                              Get.back(); // Close quiz
-                            },
-                            onTapCancel: () =>
-                                controller.selectedOptionIndex.value = -1,
-                            child: Container(
-                              width: double.infinity,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: Color(0xFFFFC2AD),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: Colors.black,
-                                  width: 1,
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Exit Quiz',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color(0xff232323),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }),
-
-                      SizedBox(height: 12),
-
-                      // Stay button
-                      Obx(() {
-                        final isPressed =
-                            controller.selectedOptionIndex.value == 995;
-                        return AnimatedScale(
-                          scale: isPressed ? 0.95 : 1.0,
-                          duration: Duration(milliseconds: 200),
-                          child: GestureDetector(
-                            onTapDown: (_) =>
-                                controller.selectedOptionIndex.value = 995,
-                            onTapUp: (_) {
-                              controller.selectedOptionIndex.value = -1;
-                              Get.back();
-                            },
-                            onTapCancel: () =>
-                                controller.selectedOptionIndex.value = -1,
-                            child: Container(
-                              width: double.infinity,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: Color(0xFFCBE8BA),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: Colors.black,
-                                  width: 1,
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Continue Quiz',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    color: Color(0xff232323),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }),
-                    ],
-                  ),
-                ),
-              ),
-            );
+            _showExitDialog(controller);
           },
           child: Icon(Icons.close, color: Color(0xff232323), size: 28),
         ),
-
         SizedBox(width: 20),
-
-        // Animated progress bar
         Expanded(
           child: Obx(() {
             double progress = controller.timeLeft.value / 30.0;
@@ -233,14 +105,11 @@ class WordBlitzPage extends StatelessWidget {
             );
           }),
         ),
-
         SizedBox(width: 20),
-
-        // Timer
         SizedBox(
           width: 55,
           child: Obx(
-            () => Text(
+                () => Text(
               '${controller.timeLeft.value}s',
               style: GoogleFonts.inter(
                 fontSize: 18,
@@ -256,10 +125,112 @@ class WordBlitzPage extends StatelessWidget {
     );
   }
 
+  void _showExitDialog(WordBlitzController controller) {
+    Get.dialog(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          padding: EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Color(0xFFFFFFFF),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.black, width: 1),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Testdan chiqasizmi?',
+                style: GoogleFonts.inter(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xff232323),
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 12),
+              Text(
+                'Sizning jarayoningiz yo\'qoladi va qaytadan boshlashingiz kerak bo\'ladi.',
+                style: GoogleFonts.inter(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xff232323),
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 24),
+              _buildDialogButton(
+                controller,
+                'Testdan chiqish',
+                Color(0xFFFFC2AD),
+                996,
+                    () {
+                  Get.back();
+                  Get.back();
+                },
+              ),
+              SizedBox(height: 12),
+              _buildDialogButton(
+                controller,
+                'Davom etish',
+                Color(0xFFCBE8BA),
+                995,
+                    () => Get.back(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDialogButton(
+      WordBlitzController controller,
+      String text,
+      Color color,
+      int index,
+      VoidCallback onTap,
+      ) {
+    return Obx(() {
+      final isPressed = controller.selectedOptionIndex.value == index;
+      return AnimatedScale(
+        scale: isPressed ? 0.95 : 1.0,
+        duration: Duration(milliseconds: 200),
+        child: GestureDetector(
+          onTapDown: (_) => controller.selectedOptionIndex.value = index,
+          onTapUp: (_) {
+            controller.selectedOptionIndex.value = -1;
+            onTap();
+          },
+          onTapCancel: () => controller.selectedOptionIndex.value = -1,
+          child: Container(
+            width: double.infinity,
+            height: 50,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.black, width: 1),
+            ),
+            child: Center(
+              child: Text(
+                text,
+                style: GoogleFonts.inter(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xff232323),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
   Widget _buildProgressBar(WordBlitzController controller) {
     return Obx(
-      () => Text(
-        'Question ${controller.currentQuestionIndex.value + 1} of ${controller.questions.length}',
+          () => Text(
+        'Savol ${controller.currentQuestionIndex.value + 1} / ${controller.questions.length}',
         style: GoogleFonts.inter(
           fontSize: 14,
           fontWeight: FontWeight.w500,
@@ -271,7 +242,7 @@ class WordBlitzPage extends StatelessWidget {
 
   Widget _buildQuestionCard(WordBlitzController controller) {
     return Obx(
-      () => Container(
+          () => Container(
         width: double.infinity,
         padding: EdgeInsets.all(24),
         decoration: BoxDecoration(
@@ -281,7 +252,7 @@ class WordBlitzPage extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            controller.currentQuestion.word,
+            controller.currentQuestion.englishWord,
             style: GoogleFonts.inter(
               fontSize: 32,
               fontWeight: FontWeight.w700,
@@ -296,7 +267,7 @@ class WordBlitzPage extends StatelessWidget {
 
   Widget _buildAnswerOptions(WordBlitzController controller) {
     return Obx(
-      () => Column(
+          () => Column(
         children: controller.currentOptions.asMap().entries.map((entry) {
           int index = entry.key;
           String option = entry.value;
@@ -307,10 +278,10 @@ class WordBlitzPage extends StatelessWidget {
   }
 
   Widget _buildAnswerOption(
-    WordBlitzController controller,
-    String option,
-    int index,
-  ) {
+      WordBlitzController controller,
+      String option,
+      int index,
+      ) {
     return TweenAnimationBuilder<double>(
       duration: Duration(milliseconds: 600 + (index * 100)),
       tween: Tween(begin: 0.0, end: 1.0),
@@ -322,8 +293,7 @@ class WordBlitzPage extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.only(bottom: 16),
               child: Obx(() {
-                final isSelected =
-                    controller.selectedOptionIndex.value == index;
+                final isSelected = controller.selectedOptionIndex.value == index;
                 return AnimatedScale(
                   scale: isSelected ? 0.95 : 1.0,
                   duration: Duration(milliseconds: 200),
@@ -350,7 +320,7 @@ class WordBlitzPage extends StatelessWidget {
                       child: Text(
                         option,
                         style: GoogleFonts.inter(
-                          fontSize: 16,
+                          fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: Color(0xff232323),
                         ),
@@ -370,11 +340,11 @@ class WordBlitzPage extends StatelessWidget {
   Color _getOptionColor(int index) {
     switch (index % 3) {
       case 0:
-        return Color(0xFFDFEDD6); // Anagram green
+        return Color(0xFFDFEDD6);
       case 1:
-        return Color(0xFFC9F1FC); // Definition blue
+        return Color(0xFFC9F1FC);
       case 2:
-        return Color(0xFFFFF0D7); // Blitz cream
+        return Color(0xFFFFF0D7);
       default:
         return Color(0xFFDFEDD6);
     }
@@ -385,10 +355,7 @@ class WordBlitzPage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          // Background quiz page (dimmed)
           Opacity(opacity: 0.3, child: _buildQuizPage(controller)),
-
-          // Bottom sheet that slides up
           Align(
             alignment: Alignment.bottomCenter,
             child: TweenAnimationBuilder<double>(
@@ -412,14 +379,12 @@ class WordBlitzPage extends StatelessWidget {
                         topLeft: Radius.circular(24),
                         topRight: Radius.circular(24),
                       ),
-                      // border: Border.all(color: Colors.black, width: 1),
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(24),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Drag indicator
                           Container(
                             width: 40,
                             height: 4,
@@ -428,151 +393,16 @@ class WordBlitzPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(2),
                             ),
                           ),
-
                           SizedBox(height: 30),
-
-                          // Result indicator with scale animation
-                          Obx(() {
-                            bool isCorrect = controller.isCorrectAnswer(
-                              controller.selectedAnswer.value,
-                            );
-                            return TweenAnimationBuilder<double>(
-                              duration: Duration(milliseconds: 600),
-                              tween: Tween(begin: 0.0, end: 1.0),
-                              curve: Curves.elasticOut,
-                              builder: (context, scaleValue, child) {
-                                return Transform.scale(
-                                  scale: scaleValue,
-                                  child: Container(
-                                    width: 80,
-                                    height: 80,
-                                    decoration: BoxDecoration(
-                                      color: isCorrect
-                                          ? Color(0xFFCBE8BA)
-                                          : Color(0xFFFFC2AD),
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: Colors.black,
-                                        width: 2,
-                                      ),
-                                    ),
-                                    child: Icon(
-                                      isCorrect ? Icons.check : Icons.close,
-                                      color: Color(0xff232323),
-                                      size: 40,
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          }),
-
+                          _buildResultIndicator(controller),
                           SizedBox(height: 20),
-
-                          Obx(() {
-                            bool isCorrect = controller.isCorrectAnswer(
-                              controller.selectedAnswer.value,
-                            );
-                            return Text(
-                              isCorrect ? 'Correct!' : 'Incorrect',
-                              style: GoogleFonts.inter(
-                                fontSize: 28,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xff232323),
-                              ),
-                            );
-                          }),
-
+                          _buildResultText(controller),
                           SizedBox(height: 30),
-
-                          // Word card
-                          Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              color: Color(0xFFD9CAFA),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: Colors.black, width: 1),
-                            ),
-                            child: Text(
-                              controller.currentQuestion.word,
-                              style: GoogleFonts.inter(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xff232323),
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-
+                          _buildWordCard(controller),
                           SizedBox(height: 16),
-
-                          // Correct definition
-                          Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              color: Color(0xFFCBE8BA),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: Colors.black, width: 1),
-                            ),
-                            child: Text(
-                              controller.currentQuestion.correctDefinition,
-                              style: GoogleFonts.inter(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xff232323),
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-
+                          _buildCorrectAnswerCard(controller),
                           SizedBox(height: 30),
-
-                          // Continue button
-                          Obx(() {
-                            final isPressed =
-                                controller.selectedOptionIndex.value == 999;
-                            return AnimatedScale(
-                              scale: isPressed ? 0.95 : 1.0,
-                              duration: Duration(milliseconds: 200),
-                              child: GestureDetector(
-                                onTapDown: (_) {
-                                  HapticFeedback.lightImpact();
-                                  controller.selectedOptionIndex.value = 999;
-                                },
-                                onTapUp: (_) {
-                                  controller.nextQuestion();
-                                  controller.selectedOptionIndex.value = -1;
-                                },
-                                onTapCancel: () {
-                                  controller.selectedOptionIndex.value = -1;
-                                },
-                                child: Container(
-                                  width: double.infinity,
-                                  height: 56,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFD9CAFA),
-                                    borderRadius: BorderRadius.circular(16),
-                                    border: Border.all(
-                                      color: Colors.black,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'Continue',
-                                      style: GoogleFonts.inter(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w700,
-                                        color: Color(0xff232323),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          }),
+                          _buildContinueButton(controller),
                         ],
                       ),
                     ),
@@ -586,13 +416,138 @@ class WordBlitzPage extends StatelessWidget {
     );
   }
 
+  Widget _buildResultIndicator(WordBlitzController controller) {
+    return Obx(() {
+      bool isCorrect = controller.isCorrectAnswer(controller.selectedAnswer.value);
+      return TweenAnimationBuilder<double>(
+        duration: Duration(milliseconds: 600),
+        tween: Tween(begin: 0.0, end: 1.0),
+        curve: Curves.elasticOut,
+        builder: (context, scaleValue, child) {
+          return Transform.scale(
+            scale: scaleValue,
+            child: Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: isCorrect ? Color(0xFFCBE8BA) : Color(0xFFFFC2AD),
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.black, width: 2),
+              ),
+              child: Icon(
+                isCorrect ? Icons.check : Icons.close,
+                color: Color(0xff232323),
+                size: 40,
+              ),
+            ),
+          );
+        },
+      );
+    });
+  }
+
+  Widget _buildResultText(WordBlitzController controller) {
+    return Obx(() {
+      bool isCorrect = controller.isCorrectAnswer(controller.selectedAnswer.value);
+      return Text(
+        isCorrect ? 'To\'g\'ri!' : 'Noto\'g\'ri',
+        style: GoogleFonts.inter(
+          fontSize: 28,
+          fontWeight: FontWeight.w700,
+          color: Color(0xff232323),
+        ),
+      );
+    });
+  }
+
+  Widget _buildWordCard(WordBlitzController controller) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Color(0xFFD9CAFA),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.black, width: 1),
+      ),
+      child: Text(
+        controller.currentQuestion.englishWord,
+        style: GoogleFonts.inter(
+          fontSize: 24,
+          fontWeight: FontWeight.w700,
+          color: Color(0xff232323),
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Widget _buildCorrectAnswerCard(WordBlitzController controller) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Color(0xFFCBE8BA),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.black, width: 1),
+      ),
+      child: Text(
+        controller.currentQuestion.correctUzbekTranslation,
+        style: GoogleFonts.inter(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          color: Color(0xff232323),
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Widget _buildContinueButton(WordBlitzController controller) {
+    return Obx(() {
+      final isPressed = controller.selectedOptionIndex.value == 999;
+      return AnimatedScale(
+        scale: isPressed ? 0.95 : 1.0,
+        duration: Duration(milliseconds: 200),
+        child: GestureDetector(
+          onTapDown: (_) {
+            HapticFeedback.lightImpact();
+            controller.selectedOptionIndex.value = 999;
+          },
+          onTapUp: (_) {
+            controller.nextQuestion();
+            controller.selectedOptionIndex.value = -1;
+          },
+          onTapCancel: () => controller.selectedOptionIndex.value = -1,
+          child: Container(
+            width: double.infinity,
+            height: 56,
+            decoration: BoxDecoration(
+              color: Color(0xFFD9CAFA),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.black, width: 1),
+            ),
+            child: Center(
+              child: Text(
+                'Davom etish',
+                style: GoogleFonts.inter(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xff232323),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
   Widget _buildResultsPage(WordBlitzController controller) {
     return Padding(
       padding: EdgeInsets.all(20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Trophy/Score
           Container(
             width: 120,
             height: 120,
@@ -603,23 +558,19 @@ class WordBlitzPage extends StatelessWidget {
             ),
             child: Center(child: Text('🏆', style: TextStyle(fontSize: 60))),
           ),
-
           SizedBox(height: 30),
-
           Text(
-            'Quiz Complete!',
+            'Test tugadi!',
             style: GoogleFonts.inter(
               fontSize: 32,
               fontWeight: FontWeight.w700,
               color: Color(0xff232323),
             ),
           ),
-
           SizedBox(height: 20),
-
           Obx(
-            () => Text(
-              'Your Score: ${controller.score.value}/${controller.questions.length}',
+                () => Text(
+              'Natija: ${controller.score.value}/${controller.questions.length}',
               style: GoogleFonts.inter(
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
@@ -627,132 +578,115 @@ class WordBlitzPage extends StatelessWidget {
               ),
             ),
           ),
-
           SizedBox(height: 40),
-
-          // Accuracy percentage
-          Obx(() {
-            double accuracy =
-                (controller.score.value / controller.questions.length) * 100;
-            return Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Color(0xFFD9CAFA),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.black, width: 1),
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    'Accuracy',
-                    style: GoogleFonts.inter(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xff232323),
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    '${accuracy.toStringAsFixed(0)}%',
-                    style: GoogleFonts.inter(
-                      fontSize: 36,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xff232323),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }),
-
+          _buildAccuracyCard(controller),
           SizedBox(height: 40),
-
-          // Restart button
-          Obx(() {
-            final isPressed = controller.selectedOptionIndex.value == 998;
-            return AnimatedScale(
-              scale: isPressed ? 0.95 : 1.0,
-              duration: Duration(milliseconds: 200),
-              child: GestureDetector(
-                onTapDown: (_) {
-                  HapticFeedback.lightImpact();
-                  controller.selectedOptionIndex.value = 998;
-                },
-                onTapUp: (_) {
-                  controller.restartQuiz();
-                  controller.selectedOptionIndex.value = -1;
-                },
-                onTapCancel: () {
-                  controller.selectedOptionIndex.value = -1;
-                },
-                child: Container(
-                  width: double.infinity,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFCBE8BA),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.black, width: 1),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Play Again',
-                      style: GoogleFonts.inter(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xff232323),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }),
-
+          _buildActionButton(
+            controller,
+            'Qayta o\'ynash',
+            Color(0xFFCBE8BA),
+            998,
+                () => controller.restartQuiz(),
+          ),
           SizedBox(height: 16),
-
-          // Back to menu button
-          Obx(() {
-            final isPressed = controller.selectedOptionIndex.value == 997;
-            return AnimatedScale(
-              scale: isPressed ? 0.95 : 1.0,
-              duration: Duration(milliseconds: 200),
-              child: GestureDetector(
-                onTapDown: (_) {
-                  HapticFeedback.lightImpact();
-                  controller.selectedOptionIndex.value = 997;
-                },
-                onTapUp: (_) {
-                  Get.back();
-                  controller.selectedOptionIndex.value = -1;
-                },
-                onTapCancel: () {
-                  controller.selectedOptionIndex.value = -1;
-                },
-                child: Container(
-                  width: double.infinity,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFFAFAFA),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Color(0xFFEFEFEF), width: 1),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Back to Menu',
-                      style: GoogleFonts.inter(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xff232323),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }),
+          _buildActionButton(
+            controller,
+            'Menyuga qaytish',
+            Color(0xFFFAFAFA),
+            997,
+                () => Get.back(),
+          ),
         ],
       ),
     );
+  }
+
+  Widget _buildAccuracyCard(WordBlitzController controller) {
+    return Obx(() {
+      double accuracy = (controller.score.value / controller.questions.length) * 100;
+      return Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Color(0xFFD9CAFA),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.black, width: 1),
+        ),
+        child: Column(
+          children: [
+            Text(
+              'Aniqlik',
+              style: GoogleFonts.inter(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Color(0xff232323),
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              '${accuracy.toStringAsFixed(0)}%',
+              style: GoogleFonts.inter(
+                fontSize: 36,
+                fontWeight: FontWeight.w700,
+                color: Color(0xff232323),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget _buildActionButton(
+      WordBlitzController controller,
+      String text,
+      Color color,
+      int index,
+      VoidCallback onTap,
+      ) {
+    return Obx(() {
+      final isPressed = controller.selectedOptionIndex.value == index;
+      return AnimatedScale(
+        scale: isPressed ? 0.95 : 1.0,
+        duration: Duration(milliseconds: 200),
+        child: GestureDetector(
+          onTapDown: (_) {
+            HapticFeedback.lightImpact();
+            controller.selectedOptionIndex.value = index;
+          },
+          onTapUp: (_) {
+            onTap();
+            controller.selectedOptionIndex.value = -1;
+          },
+          onTapCancel: () => controller.selectedOptionIndex.value = -1,
+          child: Container(
+            width: double.infinity,
+            height: 56,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: color == Color(0xFFFAFAFA)
+                    ? Color(0xFFEFEFEF)
+                    : Colors.black,
+                width: 1,
+              ),
+            ),
+            child: Center(
+              child: Text(
+                text,
+                style: GoogleFonts.inter(
+                  fontSize: 18,
+                  fontWeight: color == Color(0xFFFAFAFA)
+                      ? FontWeight.w600
+                      : FontWeight.w700,
+                  color: Color(0xff232323),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    });
   }
 }

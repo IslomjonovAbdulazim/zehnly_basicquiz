@@ -6,30 +6,30 @@ import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 
 class Question {
-  final String englishWord;
-  final String correctUzbekTranslation;
-  final List<String> wrongUzbekOptions;
+  final String word;
+  final String correctDefinition;
+  final List<String> wrongOptions;
 
   Question({
-    required this.englishWord,
-    required this.correctUzbekTranslation,
-    required this.wrongUzbekOptions,
+    required this.word,
+    required this.correctDefinition,
+    required this.wrongOptions,
   });
 
   List<String> get allOptions {
-    List<String> options = [correctUzbekTranslation, ...wrongUzbekOptions];
+    List<String> options = [correctDefinition, ...wrongOptions];
     options.shuffle();
     return options;
   }
 }
 
-class WordBlitzController extends GetxController
+class GuessDefinitionController extends GetxController
     with GetTickerProviderStateMixin {
   // Quiz state
   late List<Question> questions;
   RxInt currentQuestionIndex = 0.obs;
   RxInt score = 0.obs;
-  RxInt timeLeft = 30.obs;
+  RxInt timeLeft = 60.obs;
   RxString selectedAnswer = ''.obs;
   RxBool isAnswered = false.obs;
   RxInt selectedOptionIndex = (-1).obs;
@@ -56,67 +56,84 @@ class WordBlitzController extends GetxController
   // Current question options (shuffled)
   RxList<String> currentOptions = <String>[].obs;
 
-  // Static quiz data - English to Uzbek
+  // Static quiz data
   final List<Question> quizQuestions = [
     Question(
-      englishWord: "House",
-      correctUzbekTranslation: "Uy",
-      wrongUzbekOptions: ["Mashina", "Kitob"],
+      word: "Integrity",
+      correctDefinition:
+      "the quality of being honest and having strong moral principles",
+      wrongOptions: [
+        "relating to money or currency",
+        "a piece of land surrounded by water",
+      ],
     ),
     Question(
-      englishWord: "Water",
-      correctUzbekTranslation: "Suv",
-      wrongUzbekOptions: ["Olov", "Havo"],
+      word: "Ambiguous",
+      correctDefinition:
+      "open to more than one interpretation; not having one obvious meaning",
+      wrongOptions: [
+        "extremely angry or furious",
+        "relating to ancient history",
+      ],
     ),
     Question(
-      englishWord: "Book",
-      correctUzbekTranslation: "Kitob",
-      wrongUzbekOptions: ["Qalam", "Stol"],
+      word: "Catalyst",
+      correctDefinition:
+      "a person or thing that precipitates an event or change",
+      wrongOptions: ["a type of building material", "a musical instrument"],
     ),
     Question(
-      englishWord: "Food",
-      correctUzbekTranslation: "Taom",
-      wrongUzbekOptions: ["Ichimlik", "Kiyim"],
+      word: "Eloquent",
+      correctDefinition: "fluent or persuasive in speaking or writing",
+      wrongOptions: ["related to electricity", "extremely loud or noisy"],
     ),
     Question(
-      englishWord: "Friend",
-      correctUzbekTranslation: "Do'st",
-      wrongUzbekOptions: ["Dushman", "Tanish"],
+      word: "Resilient",
+      correctDefinition:
+      "able to withstand or recover quickly from difficult conditions",
+      wrongOptions: ["relating to real estate", "having a bad smell"],
     ),
     Question(
-      englishWord: "School",
-      correctUzbekTranslation: "Maktab",
-      wrongUzbekOptions: ["Kasalxona", "Magazin"],
+      word: "Paradigm",
+      correctDefinition: "a typical example or pattern of something; a model",
+      wrongOptions: ["a type of bird", "a mathematical equation"],
     ),
     Question(
-      englishWord: "Money",
-      correctUzbekTranslation: "Pul",
-      wrongUzbekOptions: ["Oltin", "Kumush"],
+      word: "Meticulous",
+      correctDefinition:
+      "showing great attention to detail; very careful and precise",
+      wrongOptions: [
+        "relating to weather conditions",
+        "extremely fast or quick",
+      ],
     ),
     Question(
-      englishWord: "Time",
-      correctUzbekTranslation: "Vaqt",
-      wrongUzbekOptions: ["Soat", "Kun"],
+      word: "Pragmatic",
+      correctDefinition: "dealing with things sensibly and realistically",
+      wrongOptions: ["relating to ancient Greece", "extremely dramatic"],
     ),
     Question(
-      englishWord: "Love",
-      correctUzbekTranslation: "Sevgi",
-      wrongUzbekOptions: ["Nafrat", "Qo'rquv"],
+      word: "Ephemeral",
+      correctDefinition: "lasting for a very short time",
+      wrongOptions: ["relating to elephants", "extremely expensive"],
     ),
     Question(
-      englishWord: "Work",
-      correctUzbekTranslation: "Ish",
-      wrongUzbekOptions: ["Dam olish", "O'yin"],
+      word: "Ubiquitous",
+      correctDefinition: "present, appearing, or found everywhere",
+      wrongOptions: ["relating to computers", "extremely unique or rare"],
     ),
     Question(
-      englishWord: "Family",
-      correctUzbekTranslation: "Oila",
-      wrongUzbekOptions: ["Qo'shni", "Mehmon"],
+      word: "Tenacious",
+      correctDefinition: "tending to keep a firm hold; persistent",
+      wrongOptions: ["relating to tennis", "extremely fragile"],
     ),
     Question(
-      englishWord: "Health",
-      correctUzbekTranslation: "Sog'liq",
-      wrongUzbekOptions: ["Kasallik", "Charchash"],
+      word: "Verbose",
+      correctDefinition: "using or expressed in more words than are needed",
+      wrongOptions: [
+        "relating to plants and nature",
+        "extremely quiet or silent",
+      ],
     ),
   ];
 
@@ -232,7 +249,7 @@ class WordBlitzController extends GetxController
       print('Playing time up sound');
       _playTimeUpSound();
     } else if (answer ==
-        questions[currentQuestionIndex.value].correctUzbekTranslation) {
+        questions[currentQuestionIndex.value].correctDefinition) {
       score.value++;
       print('Playing correct sound');
       _playCorrectSound();
@@ -343,7 +360,7 @@ class WordBlitzController extends GetxController
   Question get currentQuestion => questions[currentQuestionIndex.value];
 
   bool isCorrectAnswer(String answer) {
-    return answer == currentQuestion.correctUzbekTranslation;
+    return answer == currentQuestion.correctDefinition;
   }
 
   @override
