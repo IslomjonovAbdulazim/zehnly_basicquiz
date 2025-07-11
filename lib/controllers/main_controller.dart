@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Game {
   final String title;
@@ -20,8 +21,9 @@ class Game {
 class MainController extends GetxController with GetTickerProviderStateMixin {
   // Observable variables
   var selectedGameIndex = (-1).obs;
+  var selectedRecentGame = false.obs;
   var isLoading = false.obs;
-  var recentlyPlayedGames = <Game>[].obs;
+  var recentlyPlayedGame = Rxn<Game>();
   var allGames = <Game>[].obs;
 
   // Animation controllers
@@ -66,41 +68,83 @@ class MainController extends GetxController with GetTickerProviderStateMixin {
     allGames.value = [
       Game(
         title: 'Anagram Attack',
-        description: '',
+        description: 'Solve word puzzles by rearranging letters',
         color: 'anagram',
-        icon: '',
+        icon: '🔤',
       ),
       Game(
         title: 'Word Blitz',
-        description: '',
+        description: 'Find words as fast as you can',
         color: 'blitz',
-        icon: '',
+        icon: '⚡',
       ),
       Game(
         title: 'Guess the Definition Blitz',
-        description: '',
+        description: 'Match words with their meanings',
         color: 'definition',
-        icon: '',
+        icon: '📖',
       ),
     ];
   }
 
-  void loadRecentlyPlayed() {
-    // Fixed recently played - no longer data driven
-    recentlyPlayedGames.value = [];
+  Future<void> loadRecentlyPlayed() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final gameTitle = prefs.getString('last_game_title');
+      final gameColor = prefs.getString('last_game_color');
+
+      if (gameTitle != null && gameColor != null) {
+        recentlyPlayedGame.value = Game(
+          title: gameTitle,
+          description: 'Last played recently',
+          color: gameColor,
+          icon: _getIconForColor(gameColor),
+          isRecentlyPlayed: true,
+        );
+      }
+    } catch (e) {
+      print('Error loading recently played: $e');
+    }
+  }
+
+  String _getIconForColor(String color) {
+    switch (color.toLowerCase()) {
+      case 'anagram':
+        return '🔤';
+      case 'blitz':
+        return '⚡';
+      case 'definition':
+        return '📖';
+      default:
+        return '🎮';
+    }
+  }
+
+  Future<void> saveLastPlayedGame(Game game) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('last_game_title', game.title);
+      await prefs.setString('last_game_color', game.color);
+
+      // Update the reactive variable
+      recentlyPlayedGame.value = Game(
+        title: game.title,
+        description: 'Last played recently',
+        color: game.color,
+        icon: game.icon,
+        isRecentlyPlayed: true,
+      );
+    } catch (e) {
+      print('Error saving last played game: $e');
+    }
   }
 
   void selectGame(int index) {
     selectedGameIndex.value = index;
 
-    // Add haptic feedback
-    Get.defaultDialog(
-      title: 'Coming Soon!',
-      middleText: 'This game will be available soon.',
-      textConfirm: 'OK',
-      confirmTextColor: Colors.white,
-      onConfirm: () => Get.back(),
-    );
+    // Save the selected game as last played
+    final selectedGame = allGames[index];
+    saveLastPlayedGame(selectedGame);
 
     // Reset selection after a delay
     Future.delayed(Duration(milliseconds: 200), () {
@@ -108,17 +152,8 @@ class MainController extends GetxController with GetTickerProviderStateMixin {
     });
   }
 
-  void playRecentGame(Game game) {
-    Get.snackbar(
-      'Loading ${game.title}',
-      'Preparing your game...',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.black87,
-      colorText: Colors.white,
-      margin: EdgeInsets.all(16),
-      borderRadius: 12,
-      duration: Duration(seconds: 2),
-    );
+  void selectRecentGame() {
+    selectedRecentGame.value = true;
   }
 
   @override

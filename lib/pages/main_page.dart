@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:zehnly_basicquiz/pages/anagram_page.dart';
 import 'package:zehnly_basicquiz/pages/guess_definition_page.dart';
 import 'package:zehnly_basicquiz/pages/word_blitz_page.dart';
 import '../controllers/main_controller.dart';
@@ -26,23 +27,30 @@ class MainPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
-                      // Recently played title
-                      Center(
-                        child: Text(
-                          'Recently played',
-                          style: GoogleFonts.inter(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xff232323),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 8),
-
-                      // Recently played card
-                      _buildRecentlyPlayedCard(),
+                      // Recently played section
+                      Obx(() {
+                        if (controller.recentlyPlayedGame.value != null) {
+                          return Column(
+                            children: [
+                              Center(
+                                child: Text(
+                                  'Recently played',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xff232323),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              _buildRecentlyPlayedCard(),
+                              SizedBox(height: 20),
+                            ],
+                          );
+                        } else {
+                          return SizedBox.shrink();
+                        }
+                      }),
 
                       // Game cards
                       Expanded(
@@ -66,43 +74,47 @@ class MainPage extends StatelessWidget {
   }
 
   Widget _buildRecentlyPlayedCard() {
-    return TweenAnimationBuilder<double>(
-      duration: Duration(milliseconds: 600),
-      tween: Tween(begin: 0.0, end: 1.0),
-      builder: (context, value, child) {
-        return Transform.translate(
-          offset: Offset(0, 20 * (1 - value)),
-          child: Opacity(
-            opacity: value,
-            child: GestureDetector(
-              onTap: () {
-                HapticFeedback.lightImpact();
-                _showComingSoon();
-              },
-              child: Container(
-                width: double.infinity,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: Color(0xFFD9CAFA), // #D9CAFA
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.black, width: 1),
-                ),
-                child: Center(
-                  child: Text(
-                    'Anagram Attack',
-                    style: GoogleFonts.inter(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xff232323),
-                    ),
-                  ),
+    return Obx(() {
+      final recentGame = controller.recentlyPlayedGame.value!;
+      final isSelected = controller.selectedRecentGame.value;
+
+      return AnimatedScale(
+        scale: isSelected ? 0.95 : 1.0,
+        duration: Duration(milliseconds: 200),
+        child: GestureDetector(
+          onTapDown: (_) {
+            HapticFeedback.lightImpact();
+            controller.selectRecentGame();
+          },
+          onTapUp: (_) {
+            _navigateToGame(recentGame.color);
+            controller.selectedRecentGame.value = false;
+          },
+          onTapCancel: () {
+            controller.selectedRecentGame.value = false;
+          },
+          child: Container(
+            width: double.infinity,
+            height: 50,
+            decoration: BoxDecoration(
+              color: _getCardColor(recentGame.color),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.black, width: 1),
+            ),
+            child: Center(
+              child: Text(
+                recentGame.title,
+                style: GoogleFonts.inter(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xff232323),
                 ),
               ),
             ),
           ),
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 
   Widget _buildGameCard(Game game, int index) {
@@ -127,11 +139,8 @@ class MainPage extends StatelessWidget {
                       controller.selectedGameIndex.value = index;
                     },
                     onTapUp: (_) {
-                      if (game.color == "definition") {
-                        Get.to(GuessDefinitionPage());
-                      } else if (game.color == "blitz") {
-                        Get.to(WordBlitzPage());
-                      }
+                      controller.selectGame(index);
+                      _navigateToGame(game.color);
                       controller.selectedGameIndex.value = -1;
                     },
                     onTapCancel: () {
@@ -168,29 +177,31 @@ class MainPage extends StatelessWidget {
     );
   }
 
-  Color _getCardColor(String colorName) {
-    switch (colorName.toLowerCase()) {
-      case 'anagram':
-        return Color(0xFFDFEDD6); // #DFEDD6
-      case 'blitz':
-        return Color(0xFFFFF0D7); // #FFF0D7
+  void _navigateToGame(String gameColor) {
+    switch (gameColor.toLowerCase()) {
       case 'definition':
-        return Color(0xFFC9F1FC); // #C9F1FC
+        Get.to(() => GuessDefinitionPage());
+        break;
+      case 'blitz':
+        Get.to(() => WordBlitzPage());
+        break;
+      case 'anagram':
       default:
-        return Color(0xFFE0E0E0);
+        Get.to(() => AnagramPage());
+        break;
     }
   }
 
-  void _showComingSoon() {
-    Get.snackbar(
-      'Coming Soon!',
-      'This game will be available soon.',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.black87,
-      colorText: Colors.white,
-      margin: EdgeInsets.all(16),
-      borderRadius: 12,
-      duration: Duration(seconds: 2),
-    );
+  Color _getCardColor(String colorName) {
+    switch (colorName.toLowerCase()) {
+      case 'anagram':
+        return Color(0xFFDFEDD6);
+      case 'blitz':
+        return Color(0xFFFFF0D7);
+      case 'definition':
+        return Color(0xFFC9F1FC);
+      default:
+        return Color(0xFFE0E0E0);
+    }
   }
 }

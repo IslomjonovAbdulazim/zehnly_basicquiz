@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:zehnly_basicquiz/pages/home_page.dart';
 import 'pages/main_page.dart';
 
 void main() {
@@ -27,7 +28,7 @@ class WordGamesApp extends StatelessWidget {
           ),
         ),
       ),
-      home: MainPage(),
+      home: HomePage(),
       debugShowCheckedModeBanner: false,
     );
   }
