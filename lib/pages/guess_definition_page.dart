@@ -140,7 +140,7 @@ class GuessDefinitionPage extends StatelessWidget {
                               width: double.infinity,
                               height: 50,
                               decoration: BoxDecoration(
-                                color: Color(0xFFFFC2AD),
+                                color: Color(0xFFFD98CD),
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
                                   color: Colors.black,
@@ -184,7 +184,7 @@ class GuessDefinitionPage extends StatelessWidget {
                               width: double.infinity,
                               height: 50,
                               decoration: BoxDecoration(
-                                color: Color(0xFFCBE8BA),
+                                color: Color(0xFFEFC254),
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
                                   color: Colors.black,
@@ -226,8 +226,8 @@ class GuessDefinitionPage extends StatelessWidget {
               animateFromLastPercent: true,
               backgroundColor: Color(0xFFEFEFEF),
               progressColor: controller.timeLeft.value > 10
-                  ? Color(0xFFCBE8BA)
-                  : Color(0xFFFFC2AD),
+                  ? Color(0xFFEFC254)
+                  : Color(0xFFFD98CD),
               barRadius: Radius.circular(6),
               animation: true,
               animationDuration: 300,
@@ -248,7 +248,7 @@ class GuessDefinitionPage extends StatelessWidget {
                 fontWeight: FontWeight.w600,
                 color: controller.timeLeft.value > 10
                     ? Color(0xff232323)
-                    : Color(0xFFFFC2AD),
+                    : Color(0xFFFD98CD),
               ),
             ),
           ),
@@ -276,7 +276,7 @@ class GuessDefinitionPage extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: Color(0xFFD9CAFA),
+          color: Color(0xFF8D91F2),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: Colors.black, width: 1),
         ),
@@ -371,13 +371,13 @@ class GuessDefinitionPage extends StatelessWidget {
   Color _getOptionColor(int index) {
     switch (index % 3) {
       case 0:
-        return Color(0xFFDFEDD6); // Anagram green
+        return Color(0xFFEFC254); // Anagram green
       case 1:
-        return Color(0xFFC9F1FC); // Definition blue
+        return Color(0xFFD292EC); // Definition blue
       case 2:
-        return Color(0xFFFFF0D7); // Blitz cream
+        return Color(0xFF8D91F2); // Blitz cream
       default:
-        return Color(0xFFDFEDD6);
+        return Color(0xFFEFC254);
     }
   }
 
@@ -449,8 +449,8 @@ class GuessDefinitionPage extends StatelessWidget {
                                     height: 80,
                                     decoration: BoxDecoration(
                                       color: isCorrect
-                                          ? Color(0xFFCBE8BA)
-                                          : Color(0xFFFFC2AD),
+                                          ? Color(0xFFEFC254)
+                                          : Color(0xFFD292EC),
                                       shape: BoxShape.circle,
                                       border: Border.all(
                                         color: Colors.black,
@@ -491,7 +491,7 @@ class GuessDefinitionPage extends StatelessWidget {
                             width: double.infinity,
                             padding: EdgeInsets.all(20),
                             decoration: BoxDecoration(
-                              color: Color(0xFFD9CAFA),
+                              color: Color(0xFF8D91F2),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(color: Colors.black, width: 1),
                             ),
@@ -513,7 +513,7 @@ class GuessDefinitionPage extends StatelessWidget {
                             width: double.infinity,
                             padding: EdgeInsets.all(20),
                             decoration: BoxDecoration(
-                              color: Color(0xFFCBE8BA),
+                              color: Color(0xFFEFC254),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(color: Colors.black, width: 1),
                             ),
@@ -553,7 +553,7 @@ class GuessDefinitionPage extends StatelessWidget {
                                   width: double.infinity,
                                   height: 56,
                                   decoration: BoxDecoration(
-                                    color: Color(0xFFD9CAFA),
+                                    color: Color(0xFF8D91F2),
                                     borderRadius: BorderRadius.circular(16),
                                     border: Border.all(
                                       color: Colors.black,
@@ -598,7 +598,7 @@ class GuessDefinitionPage extends StatelessWidget {
             width: 120,
             height: 120,
             decoration: BoxDecoration(
-              color: Color(0xFFCBE8BA),
+              color: Color(0xFFEFC254),
               shape: BoxShape.circle,
               border: Border.all(color: Colors.black, width: 2),
             ),
@@ -639,7 +639,7 @@ class GuessDefinitionPage extends StatelessWidget {
               width: double.infinity,
               padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Color(0xFFD9CAFA),
+                color: Color(0xFF8D91F2),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: Colors.black, width: 1),
               ),
@@ -691,7 +691,7 @@ class GuessDefinitionPage extends StatelessWidget {
                   width: double.infinity,
                   height: 56,
                   decoration: BoxDecoration(
-                    color: Color(0xFFCBE8BA),
+                    color: Color(0xFFEFC254),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(color: Colors.black, width: 1),
                   ),

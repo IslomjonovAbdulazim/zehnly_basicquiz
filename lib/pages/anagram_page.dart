@@ -164,7 +164,7 @@ class AnagramPage extends StatelessWidget {
               _buildDialogButton(
                 controller,
                 'O\'yindan chiqish',
-                Color(0xFFFFC2AD),
+                Color(0xffEFC254),
                 996,
                     () {
                   Get.back();
@@ -175,7 +175,7 @@ class AnagramPage extends StatelessWidget {
               _buildDialogButton(
                 controller,
                 'Davom etish',
-                Color(0xFFCBE8BA),
+                Color(0xFFD292EC),
                 995,
                     () => Get.back(),
               ),
@@ -235,7 +235,7 @@ class AnagramPage extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: Color(0xFFCBE8BA),
+          color: Color(0xFFEFC254),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: Colors.black, width: 1),
         ),
@@ -271,7 +271,7 @@ class AnagramPage extends StatelessWidget {
       height: 80,
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Color(0xFFD9CAFA),
+        color: Color(0xFFFD98CD),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.black, width: 1),
       ),
@@ -485,7 +485,7 @@ class AnagramPage extends StatelessWidget {
             width: double.infinity,
             height: 56,
             decoration: BoxDecoration(
-              color: canSubmit ? Color(0xFFCBE8BA) : Color(0xFFEFEFEF),
+              color: canSubmit ? Color(0xFFD292EC) : Color(0xFFEFEFEF),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: Colors.black, width: 1),
             ),
@@ -632,7 +632,7 @@ class AnagramPage extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: isCorrect ? Color(0xFFCBE8BA) : Color(0xFFFFC2AD),
+          color: isCorrect ? Color(0xFFEFC254) : Color(0xFFFD98CD),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: Colors.black, width: 1),
         ),
@@ -667,7 +667,7 @@ class AnagramPage extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Color(0xFFD9CAFA),
+        color: Color(0xFFD292EC),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.black, width: 1),
       ),
@@ -716,7 +716,7 @@ class AnagramPage extends StatelessWidget {
             width: double.infinity,
             height: 56,
             decoration: BoxDecoration(
-              color: Color(0xFFD9CAFA),
+              color: Color(0xFFD292EC),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: Colors.black, width: 1),
             ),
@@ -726,7 +726,7 @@ class AnagramPage extends StatelessWidget {
                 style: GoogleFonts.inter(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xff232323),
+                  color: Color(0xff666666),
                 ),
               ),
             ),
@@ -746,7 +746,7 @@ class AnagramPage extends StatelessWidget {
             width: 120,
             height: 120,
             decoration: BoxDecoration(
-              color: Color(0xFFCBE8BA),
+              color: Color(0xFFEFC254),
               shape: BoxShape.circle,
               border: Border.all(color: Colors.black, width: 2),
             ),
@@ -778,7 +778,7 @@ class AnagramPage extends StatelessWidget {
           _buildActionButton(
             controller,
             'Qayta o\'ynash',
-            Color(0xFFCBE8BA),
+            Color(0xFFEFC254),
             998,
                 () => controller.restartGame(),
           ),
@@ -802,7 +802,7 @@ class AnagramPage extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Color(0xFFD9CAFA),
+          color: Color(0xFFFD98CD),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: Colors.black, width: 1),
         ),

@@ -162,7 +162,7 @@ class WordBlitzPage extends StatelessWidget {
               _buildDialogButton(
                 controller,
                 'Testdan chiqish',
-                Color(0xFFFFC2AD),
+                Color(0xFFEFC254),
                 996,
                     () {
                   Get.back();
@@ -173,7 +173,7 @@ class WordBlitzPage extends StatelessWidget {
               _buildDialogButton(
                 controller,
                 'Davom etish',
-                Color(0xFFCBE8BA),
+                Color(0xFFFD98CD),
                 995,
                     () => Get.back(),
               ),
@@ -246,7 +246,7 @@ class WordBlitzPage extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: Color(0xFFD9CAFA),
+          color: Color(0xFF8D91F2),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: Colors.black, width: 1),
         ),
@@ -340,13 +340,13 @@ class WordBlitzPage extends StatelessWidget {
   Color _getOptionColor(int index) {
     switch (index % 3) {
       case 0:
-        return Color(0xFFDFEDD6);
+        return Color(0xFFEFC254);
       case 1:
-        return Color(0xFFC9F1FC);
+        return Color(0xFFFD98CD);
       case 2:
-        return Color(0xFFFFF0D7);
+        return Color(0xFFD292EC);
       default:
-        return Color(0xFFDFEDD6);
+        return Color(0xFFEFC254);
     }
   }
 
@@ -430,7 +430,7 @@ class WordBlitzPage extends StatelessWidget {
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: isCorrect ? Color(0xFFCBE8BA) : Color(0xFFFFC2AD),
+                color: isCorrect ? Color(0xFFEFC254) : Color(0xFFD292EC),
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.black, width: 2),
               ),
@@ -465,7 +465,7 @@ class WordBlitzPage extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Color(0xFFD9CAFA),
+        color: Color(0xFF8D91F2),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.black, width: 1),
       ),
@@ -486,7 +486,7 @@ class WordBlitzPage extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Color(0xFFCBE8BA),
+        color: Color(0xFFEFC254),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.black, width: 1),
       ),
@@ -522,7 +522,7 @@ class WordBlitzPage extends StatelessWidget {
             width: double.infinity,
             height: 56,
             decoration: BoxDecoration(
-              color: Color(0xFFD9CAFA),
+              color: Color(0xFF8D91F2),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: Colors.black, width: 1),
             ),
@@ -552,7 +552,7 @@ class WordBlitzPage extends StatelessWidget {
             width: 120,
             height: 120,
             decoration: BoxDecoration(
-              color: Color(0xFFCBE8BA),
+              color: Color(0xFFEFC254),
               shape: BoxShape.circle,
               border: Border.all(color: Colors.black, width: 2),
             ),
@@ -584,7 +584,7 @@ class WordBlitzPage extends StatelessWidget {
           _buildActionButton(
             controller,
             'Qayta o\'ynash',
-            Color(0xFFCBE8BA),
+            Color(0xFFEFC254),
             998,
                 () => controller.restartQuiz(),
           ),
@@ -608,7 +608,7 @@ class WordBlitzPage extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Color(0xFFD9CAFA),
+          color: Color(0xFF8D91F2),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: Colors.black, width: 1),
         ),
